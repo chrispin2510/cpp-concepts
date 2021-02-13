@@ -5,17 +5,12 @@ using std::cin;  using std::bad_alloc;
 using std::endl;
 
 template <class T>
-bool make2dArray(T ** &x, int numOfRows, int numOfCols)
+void make2dArray(T ** &x, int numOfRows, int numOfCols)
 {
-    try {
-        x = new T * [numOfRows];
-
-        for (int i = 0; i < numOfRows; i++) {
-            x[i] = new T [numOfCols];
-        }
-        return true;
+    x = new T * [numOfRows];
+    for (int i = 0; i < numOfRows; i++) {
+        x[i] = new T [numOfCols];
     }
-    catch (bad_alloc) { return false; }
 }
 
 template <class T>
@@ -60,11 +55,15 @@ int main()
     cout << "\nenter number of cols: ";
     cin >> numOfCols;
 
-    bool isMade = make2dArray(x, numOfRows, numOfCols);
-    if (isMade) {
-        init2dArray(x, numOfRows, numOfCols);
-        display2dArray(x, numOfRows, numOfCols);
-        delete2dArray(x, numOfRows);
+    try {
+        make2dArray(x, numOfRows, numOfCols);
     }
+    catch (bad_alloc) {
+        cerr << "Matrix could not be created" << endl;
+        exit(EXIT_FAILURE);
+    }
+    init2dArray(x, numOfRows, numOfCols);
+    display2dArray(x, numOfRows, numOfCols);
+    delete2dArray(x, numOfRows);
     return 0;
 }

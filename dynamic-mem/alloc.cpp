@@ -1,20 +1,68 @@
 #include <iostream>
 
-using std::cerr;
+using std::cout; using std::cerr;
+using std::cin;  using std::bad_alloc;
 using std::endl;
-using std::cin;
-using std::bad_alloc;
 
-int main()
+template <class T>
+void make2dArray(T ** &x, int numOfRows, int numOfCols)
 {
-    size_t n;
-    cout << "How many items to process? ";
-    cin >> n;
-    float *x;
-    try { x = new float[n]; }
-    catch (const bad_alloc& e) {
-        cerr << "Out of Memory" << endl;
+    x = new T * [numOfRows];
+
+    for (int i = 0; i < numOfRows; i++) {
+        x[i] = new T [numOfCols];
+    }
+}
+
+template <class T>
+void init2dArray(T ** &x, int numOfRows, int numOfCols)
+{
+    for (int i = 0; i < numOfRows; i++) {
+        for (int j = 0; j < numOfCols; j++) {
+            cin >> x[i][j];
+        }
+    }
+}
+
+template <class T>
+void delete2dArray(T ** &x, int numOfRows)
+{
+    for (int i = 0; i < numOfRows; i++) {
+        delete [] x[i];
+    }
+    delete [] x;
+    x = nullptr;
+}
+
+template <class T>
+void display2dArray(T ** &x, int numOfRows, int numOfCols)
+{
+    for (int i = 0; i < numOfRows; i++) {
+        for (int j = 0; j < numOfCols; j++) {
+            if (j > 0 && j < numOfCols) { cout << ", "; }
+            cout << x[i][j]; 
+        }
+        cout << endl;
+    }
+}
+
+int main() 
+{
+    int **x;
+    int numOfRows, numOfCols;
+
+    cout << "\nenter number of rows: ";
+    cin >> numOfRows;
+    cout << "\nenter number of cols: ";
+    cin >> numOfCols;
+
+    try { make2dArray(x, numOfRows, numOfCols); }
+    catch (bad_alloc) {
+        cerr << "Could not create array\n";
         exit(EXIT_FAILURE);
     }
+    init2dArray(x, numOfRows, numOfCols);
+    display2dArray(x, numOfRows, numOfCols);
+    delete2dArray(x, numOfRows);
     return 0;
 }
